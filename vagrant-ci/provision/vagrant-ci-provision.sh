@@ -9,13 +9,18 @@ su vagrant
 
 
 #Config jenkins & tools
-export ASDIR="arachni-1.1-0.5.7"
-ASVERSION="$ASDIR-linux-x86_64" 
+export ASDIR="arachni-1.4-0.5.10"
+ASMAJORVERSION="1.4"
+ASARCHITECTURE="linux-x86_64"
+ASFULLVERSION="$ASDIR-$ASARCHITECTURE" 
 ASHOME=/usr/share/arachni/$ASDIR
-ASURL="http://downloads.arachni-scanner.com/$ASVERSION.tar.gz"
+ASURL="https://github.com/Arachni/arachni/releases/download/v$ASMAJORVERSION/$ASFULLVERSION.tar.gz"
 
-JENKINS_HOST="http://localhost:8181"
+
+echo '127.0.0.1     jenkins.ci' | sudo tee --append /etc/hosts
+JENKINS_HOST="http://jenkins.ci:8181"
 JENKINS_HOME="/var/lib/jenkins"
+
 
 
 #Install Jenkins
@@ -90,34 +95,34 @@ arachni --version
 
 #Configuration Jenkins jobs
 cd ~
-curl --silent http://localhost:8181/
+curl --silent http://jenkins.ci:8181/
 sleep 30
-curl http://localhost:8181/jnlpJars/jenkins-cli.jar > jenkins-cli.jar
+curl http://jenkins.ci:8181/jnlpJars/jenkins-cli.jar > jenkins-cli.jar
 curl -L https://updates.jenkins-ci.org/latest/git.hpi > git.hpi
-curl -L http://updates.jenkins-ci.org/update-center.json | sed '1d;$d' | curl -X POST -H 'Accept: application/json' -d @- http://localhost:8181/updateCenter/byId/default/postBack
+curl -L http://updates.jenkins-ci.org/update-center.json | sed '1d;$d' | curl -X POST -H 'Accept: application/json' -d @- http://jenkins.ci:8181/updateCenter/byId/default/postBack
 java -jar jenkins-cli.jar -s $JENKINS_HOST install-plugin git-client htmlpublisher scm-api -deploy -restart
 java -jar jenkins-cli.jar -s $JENKINS_HOST install-plugin git.hpi -deploy -restart
 sleep 30
 java -jar jenkins-cli.jar -s $JENKINS_HOST create-job Arachni_Test < ~/git/wavsep-tests/jobs/Arachni_Test.xml
-java -jar jenkins-cli.jar -s $JENKINS_HOST create-job Arachni_WAVSEP_WebUI_ReportUpload_Test < ~/git/wavsep-tests/jobs/Arachni_WAVSEP_WebUI_ReportUpload_Test.xml
-java -jar jenkins-cli.jar -s $JENKINS_HOST create-job Arachni_WAVSEP_ALL_proxied < ~/git/wavsep-tests/jobs/Arachni_WAVSEP_ALL_proxied.xml
-java -jar jenkins-cli.jar -s $JENKINS_HOST create-job Arachni_WAVSEP_XSS_proxied < ~/git/wavsep-tests/jobs/Arachni_WAVSEP_XSS_proxied.xml
-java -jar jenkins-cli.jar -s $JENKINS_HOST create-job Arachni_WAVSEP_SQLi_proxied < ~/git/wavsep-tests/jobs/Arachni_WAVSEP_SQLi_proxied.xml
-java -jar jenkins-cli.jar -s $JENKINS_HOST create-job Arachni_WAVSEP_RFI_proxied < ~/git/wavsep-tests/jobs/Arachni_WAVSEP_RFI_proxied.xml
-java -jar jenkins-cli.jar -s $JENKINS_HOST create-job Arachni_WAVSEP_LFI_proxied < ~/git/wavsep-tests/jobs/Arachni_WAVSEP_LFI_proxied.xml
-java -jar jenkins-cli.jar -s $JENKINS_HOST create-job Arachni_WAVSEP_UnvalidatedRedirect_proxied < ~/git/wavsep-tests/jobs/Arachni_WAVSEP_UnvalidatedRedirect_proxied.xml
-java -jar jenkins-cli.jar -s $JENKINS_HOST create-job Arachni_WAVSEP_XSS_crawled < ~/git/wavsep-tests/jobs/Arachni_WAVSEP_XSS_crawled.xml
-java -jar jenkins-cli.jar -s $JENKINS_HOST create-job Arachni_WAVSEP_SQLi_crawled < ~/git/wavsep-tests/jobs/Arachni_WAVSEP_SQLi_crawled.xml
-java -jar jenkins-cli.jar -s $JENKINS_HOST create-job Arachni_WAVSEP_RFI_crawled < ~/git/wavsep-tests/jobs/Arachni_WAVSEP_RFI_crawled.xml
-java -jar jenkins-cli.jar -s $JENKINS_HOST create-job Arachni_WAVSEP_LFI_crawled < ~/git/wavsep-tests/jobs/Arachni_WAVSEP_LFI_crawled.xml
-java -jar jenkins-cli.jar -s $JENKINS_HOST create-job Arachni_WAVSEP_UnvalidatedRedirect_crawled < ~/git/wavsep-tests/jobs/Arachni_WAVSEP_UnvalidatedRedirect_crawled.xml
-java -jar jenkins-cli.jar -s $JENKINS_HOST create-job Arachni_WAVSEP_DOMXSS_crawled < ~/git/wavsep-tests/jobs/Arachni_WAVSEP_DOMXSS_crawled.xml
-java -jar jenkins-cli.jar -s $JENKINS_HOST create-job Arachni_WAVSEP_FalsePositives_crawled < ~/git/wavsep-tests/jobs/Arachni_WAVSEP_FalsePositives_crawled.xml
-curl -vvv -X POST -d @/home/$USER/git/wavsep-tests/jobs/wavsep_crawl_view.xml -H "Content-Type: text/xml" http://localhost:8181/createView?name=WAVSEP+%28Crawled%29
-curl -vvv -X POST -d @/home/$USER/git/wavsep-tests/jobs/wavsep_proxy_view.xml -H "Content-Type: text/xml" http://localhost:8181/createView?name=WAVSEP+%28Proxied%29
-curl -vvv -X POST -d @/home/$USER/git/wavsep-tests/jobs/wavsep_tests_view.xml -H "Content-Type: text/xml" http://localhost:8181/createView?name=Tests
+# java -jar jenkins-cli.jar -s $JENKINS_HOST create-job Arachni_WAVSEP_WebUI_ReportUpload_Test < ~/git/wavsep-tests/jobs/Arachni_WAVSEP_WebUI_ReportUpload_Test.xml
+# java -jar jenkins-cli.jar -s $JENKINS_HOST create-job Arachni_WAVSEP_ALL_proxied < ~/git/wavsep-tests/jobs/Arachni_WAVSEP_ALL_proxied.xml
+# java -jar jenkins-cli.jar -s $JENKINS_HOST create-job Arachni_WAVSEP_XSS_proxied < ~/git/wavsep-tests/jobs/Arachni_WAVSEP_XSS_proxied.xml
+# java -jar jenkins-cli.jar -s $JENKINS_HOST create-job Arachni_WAVSEP_SQLi_proxied < ~/git/wavsep-tests/jobs/Arachni_WAVSEP_SQLi_proxied.xml
+# java -jar jenkins-cli.jar -s $JENKINS_HOST create-job Arachni_WAVSEP_RFI_proxied < ~/git/wavsep-tests/jobs/Arachni_WAVSEP_RFI_proxied.xml
+# java -jar jenkins-cli.jar -s $JENKINS_HOST create-job Arachni_WAVSEP_LFI_proxied < ~/git/wavsep-tests/jobs/Arachni_WAVSEP_LFI_proxied.xml
+# java -jar jenkins-cli.jar -s $JENKINS_HOST create-job Arachni_WAVSEP_UnvalidatedRedirect_proxied < ~/git/wavsep-tests/jobs/Arachni_WAVSEP_UnvalidatedRedirect_proxied.xml
+# java -jar jenkins-cli.jar -s $JENKINS_HOST create-job Arachni_WAVSEP_XSS_crawled < ~/git/wavsep-tests/jobs/Arachni_WAVSEP_XSS_crawled.xml
+# java -jar jenkins-cli.jar -s $JENKINS_HOST create-job Arachni_WAVSEP_SQLi_crawled < ~/git/wavsep-tests/jobs/Arachni_WAVSEP_SQLi_crawled.xml
+# java -jar jenkins-cli.jar -s $JENKINS_HOST create-job Arachni_WAVSEP_RFI_crawled < ~/git/wavsep-tests/jobs/Arachni_WAVSEP_RFI_crawled.xml
+# java -jar jenkins-cli.jar -s $JENKINS_HOST create-job Arachni_WAVSEP_LFI_crawled < ~/git/wavsep-tests/jobs/Arachni_WAVSEP_LFI_crawled.xml
+# java -jar jenkins-cli.jar -s $JENKINS_HOST create-job Arachni_WAVSEP_UnvalidatedRedirect_crawled < ~/git/wavsep-tests/jobs/Arachni_WAVSEP_UnvalidatedRedirect_crawled.xml
+# java -jar jenkins-cli.jar -s $JENKINS_HOST create-job Arachni_WAVSEP_DOMXSS_crawled < ~/git/wavsep-tests/jobs/Arachni_WAVSEP_DOMXSS_crawled.xml
+# java -jar jenkins-cli.jar -s $JENKINS_HOST create-job Arachni_WAVSEP_FalsePositives_crawled < ~/git/wavsep-tests/jobs/Arachni_WAVSEP_FalsePositives_crawled.xml
+# curl -vvv -X POST -d @/home/$USER/git/wavsep-tests/jobs/wavsep_crawl_view.xml -H "Content-Type: text/xml" http://jenkins.ci:8181/createView?name=WAVSEP+%28Crawled%29
+# curl -vvv -X POST -d @/home/$USER/git/wavsep-tests/jobs/wavsep_proxy_view.xml -H "Content-Type: text/xml" http://jenkins.ci:8181/createView?name=WAVSEP+%28Proxied%29
+# curl -vvv -X POST -d @/home/$USER/git/wavsep-tests/jobs/wavsep_tests_view.xml -H "Content-Type: text/xml" http://jenkins.ci:8181/createView?name=Tests
 
-java -jar jenkins-cli.jar -s http://localhost:8181 build 'Arachni_Test'
+java -jar jenkins-cli.jar -s http://jenkins.ci:8181 build 'Arachni_Test'
 
 sudo mkdir -p $JENKINS_HOME/reports/arachni/unzipped
 sudo mkdir -p $JENKINS_HOME/reports/arachni/tmpupload
