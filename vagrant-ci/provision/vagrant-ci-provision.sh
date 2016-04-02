@@ -86,14 +86,14 @@ echo "export JENKINS_HOME="$JENKINS_HOME | sudo tee --append /etc/profile.d/env_
 sudo service jenkins restart
 
 #Test arachni executable
-arachni --version
+sudo su - jenkins -c 'arachni --version'
 
 
 #Configuration Jenkins jobs
 cd ~
 curl --silent http://jenkins.ci:8181/
-sleep 30
-curl http://jenkins.ci:8181/jnlpJars/jenkins-cli.jar > jenkins-cli.jar
+sleep 40
+curl -L http://jenkins.ci:8181/jnlpJars/jenkins-cli.jar > jenkins-cli.jar
 curl -L https://updates.jenkins-ci.org/latest/git.hpi > git.hpi
 curl -L http://updates.jenkins-ci.org/update-center.json | sed '1d;$d' | curl -X POST -H 'Accept: application/json' -d @- http://jenkins.ci:8181/updateCenter/byId/default/postBack
 java -jar jenkins-cli.jar -s $JENKINS_HOST install-plugin git-client htmlpublisher scm-api -deploy -restart
