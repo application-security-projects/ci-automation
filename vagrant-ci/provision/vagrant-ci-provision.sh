@@ -8,7 +8,7 @@
 su vagrant
 
 
-#Config jenkins & tools
+#Setup Arachni Scanner
 export ASDIR="arachni-1.4-0.5.10"
 ASMAJORVERSION="1.4"
 ASARCHITECTURE="linux-x86_64"
@@ -17,13 +17,11 @@ ASHOME=/usr/share/arachni/$ASDIR
 ASURL="https://github.com/Arachni/arachni/releases/download/v$ASMAJORVERSION/$ASFULLVERSION.tar.gz"
 
 
+#Install Jenkins
 echo '127.0.0.1     jenkins.ci' | sudo tee --append /etc/hosts
 JENKINS_HOST="http://jenkins.ci:8181"
 JENKINS_HOME="/var/lib/jenkins"
 
-
-
-#Install Jenkins
 wget -q -O - https://jenkins-ci.org/debian/jenkins-ci.org.key | sudo apt-key add -
 sudo sh -c 'echo deb http://pkg.jenkins-ci.org/debian binary/ > /etc/apt/sources.list.d/jenkins.list'
 sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password password temppass'
@@ -71,10 +69,8 @@ sudo chown -R $USER:users /usr/share/arachni/
 cd /usr/share/arachni
 
 #cp ~/*.tar.gz .
-curl --output $ASVERSION.tar.gz $ASURL
-tar -zxvf $ASVERSION.tar.gz
-cp -R ~/git/ci-automation/custom $ASDIR/
-chmod +x $ASDIR/custom/*.sh
+curl --output -L $ASFULLVERSION.tar.gz $ASURL
+tar -zxvf $ASFULLVERSION.tar.gz
 sudo chown -R jenkins:users $ASDIR
 
 export PATH=$ASHOME/bin:$PATH
