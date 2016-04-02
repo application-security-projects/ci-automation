@@ -26,5 +26,5 @@ sudo iptables -t nat -A REDSOCKS -p tcp -j REDIRECT --to-ports 12345
 # Any tcp connection made by user in group newman should be redirected.
 sudo iptables -t nat -A OUTPUT -p tcp -m owner --gid-owner proxied -j REDSOCKS
 
-sudo cp ~/git/setup-scripts/redsocks.conf /etc/redsocks.conf
+sudo cp ~/git/ci-automation/redsocks.conf /etc/redsocks.conf
 sudo service redsocks restart &
