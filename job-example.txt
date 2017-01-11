@@ -1,0 +1,31 @@
+##########Pre Test##########
+
+#Configuration
+TARGET="http://wavsep.test:8080"
+#CHECKS="xss"
+CHECKS="xss,xss_path,xss_event,xss_tag,xss_script_context,sql*,rfi,path_traversal,file_inclusion,unvalidated_redirect"
+
+
+### Run Arachni with specified checks in proxy mode
+arachni $TARGET --daemon-friendly --scope-page-limit=0 --plugin=proxy:ignore_responses=true --checks=$CHECKS --audit-forms --report-save-path=$JENKINS_HOME/reports/arachni/$BUILD_TAG.afr &
+
+
+##########Maven Test##########
+
+
+sg proxied -c "mvn clean test -e -Dtestng.suite=\"testng_wavsep_quick.xml\""
+
+
+##########Post Test##########
+
+echo "Test finished, shutting down the proxy..."
+curl --proxy localhost:8282 http://arachni.proxy/shutdown || true
+
+while [ ! -f $JENKINS_HOME/reports/arachni/$BUILD_TAG.afr  ] ;
+do
+        echo "Waiting for audit to finish and generate report"
+        sleep 15
+done
+
+#Generate report
+arachni_reporter --reporter html:outfile=$JENKINS_HOME/reports/arachni/${BUILD_TAG}-report.zip $JENKINS_HOME/reports/arachni/${BUILD_TAG}.afr
