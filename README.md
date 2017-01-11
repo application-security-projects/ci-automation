@@ -91,7 +91,7 @@ arachni_reporter --reporter html:outfile=$JENKINS_HOME/reports/arachni/${BUILD_T
 ```
 git clone https://github.com/application-security-projects/ci-automation.git
 ```
-* (Windows) Navigate to the 'vagrant_ci' directory. Right click --> Open command window here
+* (Windows) Navigate to the 'vagrant-ci' directory. Right click --> Open command window here
 ```
 vagrant up
 ```
@@ -109,12 +109,22 @@ vagrant up
 
 ### Part 3 - Screenshots
 Jenkins Dashboard:
+
 ![alt text](https://github.com/application-security-projects/ci-automation/raw/master/screenshots/ss_jenkins.png)
+
+
 Job running -- proxy opened, TestNG suite started:
+
 ![alt text](https://github.com/application-security-projects/ci-automation/raw/master/screenshots/ss_jenkins_log1.png)
+
+
 Job running -- proxy closed, auditing begins:
+
 ![alt text](https://github.com/application-security-projects/ci-automation/raw/master/screenshots/ss_jenkins_log2.png)
-Job running -- auditing complete, report generated
+
+
+Job running -- auditing complete, report generated:
+
 ![alt text](https://github.com/application-security-projects/ci-automation/raw/master/screenshots/ss_jenkins_log3.png)
 
 ##Setup Guide - Remote CI scan, Remote WebUI (SaaS model)
