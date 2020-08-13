@@ -1,4 +1,4 @@
-##Automated Dynamic Security Scanning in CI with Jenkins + TestNG + WebDriver + WAVSEP demo + Arachni Scanner 
+## Automated Dynamic Security Scanning in CI with Jenkins + TestNG + WebDriver + WAVSEP demo + Arachni Scanner 
 
 http://jenkins-ci.org/  
 
@@ -11,7 +11,7 @@ https://code.google.com/p/wavsep/
 http://www.arachni-scanner.com/  
 
 
-##Project Overview
+## Project Overview
 
 * Problem: How do we help web application security keep up in a world of high velocity software development?
 * Solution: Take existing tests for web applications/services and proxy them into a dynamic security analysis tool (Arachni) as part of a Continuous Integration (CI) process.
@@ -27,7 +27,7 @@ Other examples of clients:
 * Mobile App emulators
 
 
-##The Magic
+## The Magic
 
 One of the biggest goals for this project was to be able to proxy anything, even if proxy capabilities were not implemented on that particular client. The linux client for newman is an example of a widely used client with no proxy capabilities for version 1.x and 2.x . The Android emulator is another good example, because adding `-http-proxy http://<local-ip-address>:<port>` only proxies browser traffic, it will not pick up any requests sent by apps. These types of usecases are addressed by this project.
 
@@ -78,7 +78,7 @@ arachni_reporter --reporter html:outfile=$JENKINS_HOME/reports/arachni/${BUILD_T
 ```
 
 
-##Setup Guide - Standalone demo
+## Setup Guide - Standalone demo
 
 * The install scripts can be run on any Linux system (Ubuntu 14.04 recommended)
 * For demo purposes, the Vagrant scripts come preconfigured with Virtualbox VM networking settings. By default, this creates a Host-Only adapter assigned to IP `192.168.56.102`. Please edit the `/vagrant-ci/Vagrantfile` to meet your networking requirements if necessary.
